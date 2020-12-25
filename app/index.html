@@ -48,9 +48,18 @@
 
                 </div>
                 <div class="paint_item clear">clear</div>
-                <div class="paint_item save">save</div>
+                <a class="paint_item save">save</a>
+            </div>
+            <div class="paint_tools">
+                <div class="paint_tools-item paint_tools-brush">brush</div>
+                <div class="paint_tools-item paint_tools-ereaser">ereaser</div>
             </div>
             <canvas height='640' width='640' id='example'></canvas>
+            <div class="paint_info">
+                <input type="color" id="color_input">
+                <input type="range" min="0" max="100" step="1" value="50" class="brush_range">
+            </div>
+            <div class="cursor"></div>
         </div>
     </header>
     <script src="js/libs/lib.js"></script>
