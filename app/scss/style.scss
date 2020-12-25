@@ -1,0 +1,111 @@
+@import "global";
+@import "fonts";
+.header {
+    background-color: gray;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    color: red;
+    text-align: center;
+}
+.paint_setting{
+    display: flex;
+    justify-content: space-around;
+    height: 30px;
+}
+.color_panel {
+    display: none;
+    justify-content: space-around;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    background-color: lightgray;
+    padding: 20px;
+    cursor: default;
+}
+.paint_item {
+    position: relative;
+    &:hover {
+        background-color: darkred;
+        color: black;
+        .color_panel
+        {
+            display: flex;
+        }
+    }
+}
+.color {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.r1 {
+    background-color: rgb(121, 0, 0);
+}
+.r2 {
+    background-color: rgb(179, 0, 0);
+}
+.r3 {
+    background-color: rgb(212, 0, 0);
+}
+.r4 {
+    background-color: red;
+}
+.y1 {
+    background-color: rgb(119, 119, 0);
+}
+.y2 {
+    background-color: rgb(155, 155, 0);
+}
+.y3 {
+    background-color: rgb(223, 223, 0);
+}
+.y4 {
+    background-color: yellow;
+}
+.g1 {
+    background-color: rgb(30, 83, 30);
+}
+.g2 {
+    background-color: rgb(46, 107, 46);
+}
+.g3 {
+    background-color: rgb(86, 158, 86);
+}
+.g4 {
+    background-color: lightgreen;
+}
+
+.b1 {
+    background-color: rgb(0, 0, 121);
+}
+.b2 {
+    background-color: rgb(0, 0, 156);
+}
+.b3 {
+    background-color: rgb(0, 0, 192);
+}
+.b4 {
+    background-color: blue;
+}
+.paint_item {
+    cursor: pointer;
+    background-color: orange;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@import "media";

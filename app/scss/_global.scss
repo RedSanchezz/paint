@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+}
+
+body {}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+img {
+    object-fit: scale-down;
+    max-width: 100%;
+    display: block;
+}
