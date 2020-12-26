@@ -13,57 +13,51 @@
 
 <body>
     <header class="header">
-        <div class="paint">
-            <div class="paint_setting">
-                <div class="paint_item">
-                    colors
-                    <div class="color_panel">
-                        <div class="red">
-                            <div class="color r1"></div>
-                            <div class="color r2"></div>
-                            <div class="color r3"></div>
-                            <div class="color r4"></div>
-                        </div>
-                        <div class="yellow">
-                            <div class="color y1"></div>
-                            <div class="color y2"></div>
-                            <div class="color y3"></div>
-                            <div class="color y4"></div>
-                        </div>
-                        <div class="green">
-                            <div class="color g1"></div>
-                            <div class="color g2"></div>
-                            <div class="color g3"></div>
-                            <div class="color g4"></div>
-                        </div>
-                        <div class="blue">
-                            <div class="color b1"></div>
-                            <div class="color b2"></div>
-                            <div class="color b3"></div>
-                            <div class="color b4"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="paint_item brush">brush
-
-                </div>
-                <div class="paint_item clear">clear</div>
-                <a class="paint_item save">save</a>
+        <div class="header__panel">
+            <div class="header__panel-item">brush</div>
+            <div class="header__panel-item">2</div>
+            <div class="header__panel-item">3</div>
+            <div class="header__panel-item">save</div>
+            <div class="header__panel-item clear-item">clear
             </div>
-            <div class="paint_tools">
-                <div class="paint_tools-item paint_tools-brush">brush</div>
-                <div class="paint_tools-item paint_tools-ereaser">ereaser</div>
-            </div>
-            <canvas height='640' width='640' id='example'></canvas>
-            <div class="paint_info">
-                <input type="color" id="color_input">
-                <input type="range" min="0" max="100" step="1" value="50" class="brush_range">
-            </div>
-            <div class="cursor"></div>
         </div>
     </header>
+    <section class="paint">
+        <canvas id = "canvas"> </canvas>
+        <div class="cursor"></div>
+    </section>
+    <section class="left__panel">
+        <span class="left__panel-name">Tools</span>
+        <div class="left__panel-item left__panel-active">brush  =>
+            <div class="left__panel__brush-panel brush-panel">
+                <div class="brush-panel_item square-brush">Квадрат</div>
+                <div class="brush-panel_item line-brush">Линия</div>
+            </div>
+        </div>
+        <div class="left__panel-item left__panel-erase">erase</div>
+        <div class="left__panel-item">magnifier</div>
+        <div class="left__panel-item">4</div>
+
+    </section>
+    <section class="bottom__panel">
+        <div class="bottom__panel-item">
+            <input type="color" name="" id="bottom__panel-item-color">
+            <input type="range" min="0" max="100" step="1" value="50" id= "input__size-brush">
+        </div>
+        <div class="bottom__panel-item">2</div>
+        <div class="bottom__panel-item">3</div>
+        <div class="bottom__panel-item">4</div>
+        <div class="bottom__panel-item test_click">test</div>
+    </section>
+    <section class="right__panel">
+        <span class="right__title">История</span>
+        <div class="right__panel-item">1</div>
+        <div class="right__panel-item">2</div>
+        <div class="right__panel-item">3</div>
+        <div class="right__panel-item">4</div>
+    </section>
     <script src="js/libs/lib.js"></script>
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 
 </html>
