@@ -9,8 +9,12 @@
 .paint {
     position: absolute;
     border: 1px solid black;
-    overflow: auto;
+    overflow: hidden;
     background-color: gray;
+    top: 40px;
+    left: 80px;
+    width: calc( 100% - 280px);
+    height:  calc(100% - 80px);
 }
 
 .color_panel {
@@ -156,6 +160,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: auto;
 
 }
 .right__title {
@@ -193,8 +198,13 @@
 }
 
 .paint {
+
+}
+
+#canvas {
     position: absolute;
-    top: 40px;
-    left: 80px;
+    left: 0;
+    top: 0;
+    border: 1px solid black;
 }
 @import "media";

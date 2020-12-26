@@ -20,7 +20,9 @@ export default class Paint{
             "x":10,
             "y":10
         }
+        this._scale =1;
         this._ctx.lineWidth= 10;
+        this._historyArray = new Array();
         this._init();
     }
 
@@ -30,20 +32,6 @@ export default class Paint{
         this.setBrush({x: 10, y: 10});
         this.setTool("brush-sq");
         console.log("line with in init " + this._ctx.lineWidth);
-
-        this._canvas.addEventListener("mousemove", (e)=> {
-            let cursor = document.querySelector(".cursor");
-            cursor.style.width=this._brush.x+"px";
-            cursor.style.height=this._brush.y + "px";
-            cursor.style.backgroundColor = this.getColor();
-            cursor.style.display = "block";
-            cursor.style.top = e.offsetY -this._brush.y/2 + "px";
-            cursor.style.left = e.offsetX -this._brush.x/2 + "px";
-        });
-        this._canvas.addEventListener("mouseleave", (e)=> {
-            let cursor = document.querySelector(".cursor");
-            cursor.style.display = "none";
-        });
     }
 
     //замыкание, что бы сохранить котекст
@@ -115,6 +103,7 @@ export default class Paint{
         this._listeners.clear();
     }
 
+
     //********Public Interface *************/
     setBrush(brush){
         this._brush.x=brush.x || 10;
@@ -139,6 +128,7 @@ export default class Paint{
             case "brush-sq": {
                 console.log("brush");
                 this._removeAll();
+                this._canvas.style.cursor = "default";
                 this._action = this._setAction((e)=>{
                     console.log(e.offsetX - (this._brush.x / 2));
                         this._ctx.fillRect(e.offsetX - (this._brush.x / 2), e.offsetY - (this._brush.y / 2), this._brush.x  , this._brush.y );
@@ -149,6 +139,7 @@ export default class Paint{
                 });
 
                 this._addListener(this._canvas, "mouseup", ()=> {
+                    this._save();
                     this._removeListener(this._canvas, "mousemove", this._action);
                 });
 
@@ -158,6 +149,7 @@ export default class Paint{
             case "eraser" : {
                 console.log("ereaser");
                 this._removeAll();
+                this._canvas.style.cursor = "default";
 
                 this._action = this._setAction((e)=>{
                     this._ctx.clearRect(e.offsetX- (this._brush.x / 2), e.offsetY - (this._brush.y / 2), this._brush.x  , this._brush.y );
@@ -168,6 +160,7 @@ export default class Paint{
                 });
 
                 this._addListener(this._canvas, "mouseup", ()=> {
+                    this._save();
                     this._removeListener(this._canvas, "mousemove", this._action);
                 });
 
@@ -175,9 +168,8 @@ export default class Paint{
                 break;
             }
             case "brush-line" : {
-
                 console.log("brush-line");
-                console.log("line with in setTools " + this._ctx.lineWidth);
+                this._canvas.style.cursor = "default";
                 this.setBrush(this._brush);
                 this._removeAll();
 
@@ -186,7 +178,6 @@ export default class Paint{
                     this._ctx.lineTo(e.offsetX, e.offsetY);
                     this._ctx.stroke();
                 });
-
 
                 this._addListener(this._canvas, "mousedown", (e)=> {
                     this._ctx.beginPath();
@@ -198,9 +189,62 @@ export default class Paint{
                 this._addListener(this._canvas, "mouseup", ()=> {
                     
                     this._ctx.closePath();
+                    this._save();
                     this._removeListener(this._canvas, "mousemove", this._action);
                 });
+                break;
 
+            }
+            case "hand" : {
+                console.log("hand");
+                let x, y;
+                this.setBrush(this._brush);
+                this._removeAll();
+                this._canvas.style.cursor = "move";
+
+                this._action = this._setAction((e)=>{
+                    let offsetX = x - e.clientX;
+                    let offsetY = y - e.clientY;
+                    console.log(offsetX+  "   " + offsetY);
+                    x=e.clientX;
+                    y=e.clientY;
+
+                    this._canvas.style.left= +this._canvas.style.left.slice(0, -2) - offsetX + "px";
+                    this._canvas.style.top= +this._canvas.style.top.slice(0, -2) - offsetY + "px";
+
+                });
+
+                this._addListener(this._canvas, "mousedown", (e)=> {
+                    x=e.clientX;
+                    y=e.clientY;
+                    console.log(x + "  " + y);
+                    this._addListener(this._canvas, "mousemove", this._action);
+                });
+
+                this._addListener(this._canvas, "mouseup", ()=> {
+                    this._removeListener(this._canvas, "mousemove", this._action);
+                });
+                break;
+            }
+            case "magnifier" : {
+                console.log("magnifier");
+                this.setBrush(this._brush);
+                this._removeAll();
+
+                this._canvas.style.cursor = "default";
+
+
+                this._addListener(this._canvas, "click", (e)=>{
+                        this._scale=+this._scale+0.2;
+                        this._canvas.style.transform = "scale("+this._scale+")";
+                });
+                this._addListener(this._canvas, "contextmenu", (e)=>{
+                        this._scale=+this._scale-0.2;
+                        if(this._scale<0.1) this._scale=0.1;
+                        this._canvas.style.transform = "scale("+this._scale+")";
+                        e.preventDefault();
+                });
+                break;
             }
             default: {
 
@@ -215,7 +259,55 @@ export default class Paint{
         this._canvas.height= height ;
         this._canvas.width= width ;
     }
+    setScale(scale){
+        this._scale = +scale;
+        this._canvas.style.transform = "scale("+this._scale +")";
+    }
+    getScale(){
+        return +this._scale;
+    }
     getCanvas(){
         return this._canvas;
+    }
+    _save(){
+        let imgDate = this._canvas.toDataURL("image/png");
+        this._historyArray.push(imgDate);
+        let panel = document.querySelector(".right__panel");
+        let test = document.createElement("div");
+        test.classList.add("right__panel-item");
+
+        let index = this._historyArray.length-1;
+
+        test.addEventListener("click", (e)=> {
+            this.load(index);
+            console.log(index);
+        });
+
+        test.innerHTML = this._historyArray.length-1;
+        panel.append(test);
+    }
+
+    load(num){
+        let imgDate = this._historyArray[num];
+        let img = new Image();
+        img.onload= ()=>{
+            this.clear();
+            this._ctx.drawImage(img, 0, 0);
+        }
+        img.src = imgDate;
+    }
+    film(ms){
+        let savedThis = this;
+        let it=0;
+        let func = ()=>{
+            if(it<savedThis._historyArray.length)
+            {
+                savedThis.load(it);
+                console.log(it);
+                it++;
+                setTimeout(func, ms)
+            }
+        }
+        setTimeout(func, ms);
     }
 }
