@@ -89,7 +89,7 @@ export default class Paint{
             console.log(this._listeners);
         }
     }
-    _removeAll(){
+    _removeAllListeners(){
         for (const it of this._listeners.entries()) {
             let type = it[0];
             let array=it[1];
@@ -120,6 +120,15 @@ export default class Paint{
     getColor(){
         return this._ctx.fillStyle;
     }
+    createNewImage(){
+        this._ctx.clearRect(0, 0, this._width, this._height);
+        this._historyArray = new Array();
+        let historyItems = document.querySelectorAll(".right__panel-item");
+        historyItems.forEach(function(elem, key){
+            elem.remove();
+        });
+
+    }
     clear(){
         this._ctx.clearRect(0, 0, this._width, this._height);
     }
@@ -127,7 +136,7 @@ export default class Paint{
         switch(str){
             case "brush-sq": {
                 console.log("brush");
-                this._removeAll();
+                this._removeAllListeners();
                 this._canvas.style.cursor = "default";
                 this._action = this._setAction((e)=>{
                     console.log(e.offsetX - (this._brush.x / 2));
@@ -148,7 +157,7 @@ export default class Paint{
             }
             case "eraser" : {
                 console.log("ereaser");
-                this._removeAll();
+                this._removeAllListeners();
                 this._canvas.style.cursor = "default";
 
                 this._action = this._setAction((e)=>{
@@ -171,7 +180,7 @@ export default class Paint{
                 console.log("brush-line");
                 this._canvas.style.cursor = "default";
                 this.setBrush(this._brush);
-                this._removeAll();
+                this._removeAllListeners();
 
 
                 this._action = this._setAction((e)=>{
@@ -199,7 +208,7 @@ export default class Paint{
                 console.log("hand");
                 let x, y;
                 this.setBrush(this._brush);
-                this._removeAll();
+                this._removeAllListeners();
                 this._canvas.style.cursor = "move";
 
                 this._action = this._setAction((e)=>{
@@ -229,7 +238,7 @@ export default class Paint{
             case "magnifier" : {
                 console.log("magnifier");
                 this.setBrush(this._brush);
-                this._removeAll();
+                this._removeAllListeners();
 
                 this._canvas.style.cursor = "default";
 
@@ -251,13 +260,39 @@ export default class Paint{
             }
         }
     }
+    //при изменении размеров слетает кисть
     setSize(width, height){
+        let savedBrush = this.getBrush();
+        let color = this.getColor();
         console.log(this._height);
         console.log(this._width);
         this._height = height;
         this._width = width;
         this._canvas.height= height ;
         this._canvas.width= width ;
+        this.load(this._historyArray.length-1);
+        this.setBrush(savedBrush);
+        this.setColor(color);
+    }
+    getSize(){
+        return {
+            "width": this._width,
+            "height": this._height
+        }
+    }
+    getPosition(){
+        this.load(this._historyArray.length-1);
+        return {
+            "left": this._canvas.style.left,
+            "top": this._canvas.style.top
+        }
+    }
+    setPosition(top, left){
+        
+        this._canvas.style.left = left;
+        this._canvas.style.top = top;
+        
+
     }
     setScale(scale){
         this._scale = +scale;
@@ -266,9 +301,13 @@ export default class Paint{
     getScale(){
         return +this._scale;
     }
+
     getCanvas(){
         return this._canvas;
     }
+
+
+    //сохранить картинку в историю    
     _save(){
         let imgDate = this._canvas.toDataURL("image/png");
         this._historyArray.push(imgDate);
@@ -287,6 +326,7 @@ export default class Paint{
         panel.append(test);
     }
 
+    //загрузить вывести картинку на холст из истории
     load(num){
         let imgDate = this._historyArray[num];
         let img = new Image();
@@ -296,6 +336,7 @@ export default class Paint{
         }
         img.src = imgDate;
     }
+
     film(ms){
         let savedThis = this;
         let it=0;
@@ -309,5 +350,17 @@ export default class Paint{
             }
         }
         setTimeout(func, ms);
+    }
+
+    getHistory(){
+        return this._historyArray;
+    }
+    //сохраняем текущий canvas в виде картинки 
+    downloadImage(){
+        let link = document.createElement("a");
+        link.href = this._historyArray[this._historyArray.length-1];
+
+        link.setAttribute("download", "image.png");
+        link.click();
     }
 }

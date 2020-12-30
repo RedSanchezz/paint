@@ -14,29 +14,27 @@
 <body>
     <header class="header">
         <div class="header__panel">
-            <div class="header__panel-item">brush</div>
-            <div class="header__panel-item">2</div>
-            <div class="header__panel-item">3</div>
-            <div class="header__panel-item">save</div>
-            <div class="header__panel-item clear-item">clear
-            </div>
+            <div class="header__panel-item">Сохраненные кисти</div>
+            <div class="header__panel-item setting-canvas">Настройки Холста</div>
+            <div class="header__panel-item save-item">Скачать картинку</div>
+            <div class="header__panel-item clear-item">Очистить холст</div>
         </div>
     </header>
     <section class="paint">
-        <canvas id = "canvas"> </canvas>
+        <canvas id = "canvas" style="left: 0px; top:0px;"> </canvas>
         <div class="cursor"></div>
     </section>
     <section class="left__panel">
         <span class="left__panel-name">Tools</span>
-        <div class="left__panel-item left__panel-active">brush  =>
+        <div class="left__panel-item left__panel-active">Кисть
             <div class="left__panel__brush-panel brush-panel">
                 <div class="brush-panel_item square-brush">Квадрат</div>
                 <div class="brush-panel_item line-brush">Линия</div>
             </div>
         </div>
-        <div class="left__panel-item left__panel-erase">erase</div>
-        <div class="left__panel-item left__panel-magnifier">magnifier</div>
-        <div class="left__panel-item left__panel-hand">hand</div>
+        <div class="left__panel-item left__panel-erase">Ластик</div>
+        <div class="left__panel-item left__panel-magnifier">Увеличить</div>
+        <div class="left__panel-item left__panel-hand">Двигать</div>
     </section>
     <section class="bottom__panel">
         <div class="bottom__panel-item">
@@ -53,7 +51,25 @@
     <section class="right__panel">
         <span class="right__title">История</span>
     </section>
+
+
+
+    <div class="modal__setting-canvas">
+        <div class="modal__setting-canvas-center">
+            <div class="setting-canvas__size">
+                <label>width<input id="setting-canvas__width" type="number"></label>
+                <label>height<input id="setting-canvas__height" type="number"></label>
+            </div>
+            <div class="setting-canvas__position">
+                <label>top<input id = "setting-canvas__top" type="number"></label>
+                <label>left<input id="setting-canvas__left" type="number"></label>
+            </div>
+            <button id="modal__setting-button">Изменить</button>
+        </div>
+    </div>
+
     <script src="js/libs/lib.js"></script>
+    <script src="js/libs/gif/gif.js"></script>
     <script type="module" src="js/script.js"></script>
 </body>
 

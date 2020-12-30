@@ -48,6 +48,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     cursor: pointer;
     &:hover {
         background-color: darkred;
@@ -169,7 +170,7 @@
     margin-bottom: 20px;
 }
 .right__panel-item {
-    height: 50px;
+    min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,7 +191,54 @@
     pointer-events: none;
 }
 
+.modal__setting-canvas {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
 
+}
+.modal__setting-canvas-center {
+    padding: 20px;
+    background-color: white;
+    height: 500px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    button {
+        margin-top: 30px;
+    }
+}
+.setting-canvas__size {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    label {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.setting-canvas__position {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    label {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+.active {
+    display: flex!important;
+}
 
 #bottom__panel-item-color {
     height: 50%;

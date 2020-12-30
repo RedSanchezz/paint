@@ -1,35 +1,75 @@
 import Paint from "./Paint.js";
 
 let paint = new Paint("canvas");
-console.log(paint._ctx.lineWidth);
 
 paint.setSize(innerWidth-280, innerHeight-80);
-console.log(paint._ctx.lineWidth);
-window.addEventListener("resize", ()=> {
-    paint.setSize(innerWidth-280, innerHeight-80);
-});
 
+//global
+{
+    //при изменении размера окна сбрасывается кисть, пропадает картинка
+    window.addEventListener("resize", ()=>{
+        let settingCanvas = document.querySelector(".setting-canvas");
+        let headerItem = document.querySelector(".header__panel-item");
+    })
+}
 
-
+// header panel
 {
     let clearBtn = document.querySelector(".clear-item");
     
+    let settingCanvas = document.querySelector(".setting-canvas");
+
+
+    
+    let saveBtn = document.querySelector(".save-item");
     let testBtn = document.querySelector(".test_click");
 
     let colorInput = document.querySelector("#bottom__panel-item-color");
     let brushInp = document.querySelector("#input__size-brush");
 
-    let inputScale = document.querySelector("#input__canvas-scale");
-    inputScale.value=1;
 
-    inputScale.addEventListener("input", (e)=>{
-        paint.setScale(inputScale.value);
+
+    //настройка холста
+    let inpWidth = document.querySelector("#setting-canvas__width");
+    let inpHeight = document.querySelector("#setting-canvas__height");
+    let inpTop = document.querySelector("#setting-canvas__top");
+    let inpLeft = document.querySelector("#setting-canvas__left");
+    let modal = document.querySelector(".modal__setting-canvas");
+    settingCanvas.addEventListener("click", ()=>{
+
+        inpTop.value = paint.getPosition().top.slice(0, -2);
+
+        inpLeft.value = paint.getPosition().left.slice(0, -2);
+
+        inpWidth.value = paint.getSize().width;
+        inpHeight.value = paint.getSize().height;
+
+        if(!modal.classList.contains("active")){
+            modal.classList.add("active");
+        }
+        else{
+            modal.classList.remove("active");
+        }
+
     });
 
+    let settingBtn = document.querySelector("#modal__setting-button");
+    settingBtn.addEventListener("click", ()=>{
+        modal.classList.remove("active");
+        paint.setPosition(inpTop.value+"px", inpLeft.value + "px");
+        paint.setSize(inpWidth.value, inpHeight.value);
+    });
+    //скачать
+    saveBtn.onclick = function(){
+        paint.downloadImage();
+    };
+
     brushInp.value=paint.getBrush().x;
+
     clearBtn.onclick = function(e){
         if(confirm("Очистить холcт ?")) {
-            paint.clear();
+            paint.createNewImage();
+            
         }
     }
     brushInp.addEventListener("input", ()=> {
@@ -41,16 +81,7 @@ window.addEventListener("resize", ()=> {
     }
 
     testBtn.onclick = function(){
-        let link = document.createElement('a');
-        link.download = '1';
-
-        let blob = new Blob (["Hi Prev  Guy!"]);
-        link.href = URL.createObjectURL(blob);
-
-        console.log(link);
-
-        link.click();
-
+        paint.downloadImage();
     }
 }
 
@@ -78,12 +109,17 @@ window.addEventListener("resize", ()=> {
         paint.setTool("magnifier");
     }
 }
-
+//bottom panel
 {
-    let saveBtn = document.querySelector(".history_save");
-    let loadBtn = document.querySelector(".history_load");
     let film = document.querySelector(".bottom__panel-film");
     
+    let inputScale = document.querySelector("#input__canvas-scale");
+    inputScale.value=1;
+
+    inputScale.addEventListener("input", (e)=>{
+        paint.setScale(inputScale.value);
+    });
+
     film.onclick = function(e){
         console.log("start!");
         paint.film(100);
