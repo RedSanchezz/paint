@@ -91,13 +91,12 @@ img {
       display: flex; }
 
 .left__panel__brush-panel {
-  padding: 5px;
   display: none;
   position: absolute;
   top: 0;
   left: 100%;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background-color: red;
   cursor: default;
   flex-direction: column; }
@@ -108,10 +107,11 @@ img {
   background-color: darkred;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 10px; }
+  justify-content: center; }
   .brush-panel_item:hover {
     background-color: darkorange; }
+    .brush-panel_item:hover svg {
+      fill: black; }
 
 .left__panel-active {
   background-color: yellow; }
@@ -167,6 +167,10 @@ img {
   cursor: pointer; }
   .right__panel-item:hover {
     background-color: red; }
+
+.left__panel-icon {
+  width: 30px;
+  height: 30px; }
 
 .cursor {
   position: absolute;
