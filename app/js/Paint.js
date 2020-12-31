@@ -242,16 +242,19 @@ export default class Paint{
 
                 this._canvas.style.cursor = "default";
 
-
                 this._addListener(this._canvas, "click", (e)=>{
                         this._scale=+this._scale+0.2;
                         this._canvas.style.transform = "scale("+this._scale+")";
+                        e.preventDefault();
                 });
                 this._addListener(this._canvas, "contextmenu", (e)=>{
                         this._scale=+this._scale-0.2;
                         if(this._scale<0.1) this._scale=0.1;
                         this._canvas.style.transform = "scale("+this._scale+")";
                         e.preventDefault();
+                });
+                this._addListener(this._canvas, "dbclick", (e)=>{
+                    e.preventDefault();
                 });
                 break;
             }

@@ -19,8 +19,6 @@ paint.setSize(innerWidth-280, innerHeight-80);
     
     let settingCanvas = document.querySelector(".setting-canvas");
 
-
-    
     let saveBtn = document.querySelector(".save-item");
     let testBtn = document.querySelector(".test_click");
 
@@ -28,10 +26,11 @@ paint.setSize(innerWidth-280, innerHeight-80);
     let brushInp = document.querySelector("#input__size-brush");
 
 
-
     //настройка холста
     let inpWidth = document.querySelector("#setting-canvas__width");
     let inpHeight = document.querySelector("#setting-canvas__height");
+    let inpScale = document.querySelector("#setting-canvas__scale");
+
     let inpTop = document.querySelector("#setting-canvas__top");
     let inpLeft = document.querySelector("#setting-canvas__left");
     let modal = document.querySelector(".modal__setting-canvas");
@@ -44,6 +43,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
         inpWidth.value = paint.getSize().width;
         inpHeight.value = paint.getSize().height;
 
+        inpScale.value=paint.getScale();
         if(!modal.classList.contains("active")){
             modal.classList.add("active");
         }
@@ -58,6 +58,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
         modal.classList.remove("active");
         paint.setPosition(inpTop.value+"px", inpLeft.value + "px");
         paint.setSize(inpWidth.value, inpHeight.value);
+        paint.setScale(inpScale.value);
     });
     //скачать
     saveBtn.onclick = function(){
@@ -87,26 +88,47 @@ paint.setSize(innerWidth-280, innerHeight-80);
 
 //tool panel
 {
+
+
     let btnSq= document.querySelector(".square-brush");
     let btnLine = document.querySelector(".line-brush");
     let eraseBtn = document.querySelector(".left__panel-erase");
     let handBtn = document.querySelector(".left__panel-hand");
     let magniferBtn = document.querySelector(".left__panel-magnifier");
+
+    let menuBrush = document.querySelector(".left__panel-item");
+
+    function setUnactiveAll(){
+        menuBrush.classList.remove("left__panel-active");
+        eraseBtn.classList.remove("left__panel-active");
+        handBtn.classList.remove("left__panel-active");
+        magniferBtn.classList.remove("left__panel-active");
+    }
     btnSq.onclick = function(e){
         paint.setTool("brush-sq");
+        setUnactiveAll();
+        menuBrush.classList.add("left__panel-active");
     }
     btnLine.onclick = function(e){
         paint.setTool("brush-line");
+        setUnactiveAll();
+        menuBrush.classList.add("left__panel-active");
     }
 
     eraseBtn.onclick = function(e){
         paint.setTool("eraser");
+        setUnactiveAll();
+        eraseBtn.classList.add("left__panel-active");
     }
     handBtn.onclick = function(e){
         paint.setTool("hand");
+        setUnactiveAll();
+        handBtn.classList.add("left__panel-active");
     }
     magniferBtn.onclick = function(e){
         paint.setTool("magnifier");
+        setUnactiveAll();
+        magniferBtn.classList.add("left__panel-active");
     }
 }
 //bottom panel
