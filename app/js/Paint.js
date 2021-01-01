@@ -312,6 +312,9 @@ export default class Paint{
 
     //сохранить картинку в историю    
     _save(){
+
+
+        
         let imgDate = this._canvas.toDataURL("image/png");
         this._historyArray.push(imgDate);
         let panel = document.querySelector(".right__panel");
@@ -333,7 +336,7 @@ export default class Paint{
     load(num){
         let imgDate = this._historyArray[num];
         let img = new Image();
-        img.onload= ()=>{
+        img.onload = ()=>{
             this.clear();
             this._ctx.drawImage(img, 0, 0);
         }
@@ -366,4 +369,8 @@ export default class Paint{
         link.setAttribute("download", "image.png");
         link.click();
     }
+    getContext(){
+        return this._ctx;
+    }
+
 }

@@ -82,7 +82,21 @@ paint.setSize(innerWidth-280, innerHeight-80);
     }
 
     testBtn.onclick = function(){
-        paint.downloadImage();
+        alert("hi");
+        let encoder = new GIFEncoder(); 
+        encoder.setRepeat(0);
+        encoder.setDelay(100);
+
+        encoder.start();
+
+        paint.load(0);
+        paint.getContext().toDa
+        encoder.addFrame(paint.getContext());
+
+        console.log(paint.getContext());
+
+        encoder.finish();
+        encoder.download("download.gif");
     }
 }
 
