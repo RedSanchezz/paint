@@ -30,8 +30,7 @@ export default class Paint{
     _init(){
         this._listeners = new Map();
         this.setBrush({x: 10, y: 10});
-        this.setTool("brush-sq");
-        console.log("line with in init " + this._ctx.lineWidth);
+        this.setTool("brush-line");
     }
 
     //замыкание, что бы сохранить котекст
@@ -271,11 +270,11 @@ export default class Paint{
         console.log(this._width);
         this._height = height;
         this._width = width;
-        this._canvas.height= height ;
-        this._canvas.width= width ;
-        this.load(this._historyArray.length-1);
+        this._canvas.height = height ;
+        this._canvas.width = width ;
         this.setBrush(savedBrush);
         this.setColor(color);
+        if(this._historyArray.length!=0) this.load(this._historyArray.length-1);
     }
     getSize(){
         return {
@@ -284,7 +283,6 @@ export default class Paint{
         }
     }
     getPosition(){
-        this.load(this._historyArray.length-1);
         return {
             "left": this._canvas.style.left,
             "top": this._canvas.style.top
@@ -312,35 +310,28 @@ export default class Paint{
 
     //сохранить картинку в историю    
     _save(){
-
-
-        
-        let imgDate = this._canvas.toDataURL("image/png");
+        //Получаем обьект ImageDate  с хослта
+        let imgDate = this._ctx.getImageData(0, 0, this._width, this._height);
         this._historyArray.push(imgDate);
+
+        //Создаем элемент
         let panel = document.querySelector(".right__panel");
-        let test = document.createElement("div");
-        test.classList.add("right__panel-item");
+        let item = document.createElement("div");
+        item.classList.add("right__panel-item");
+
 
         let index = this._historyArray.length-1;
-
-        test.addEventListener("click", (e)=> {
+        item.addEventListener("click", (e)=> {
             this.load(index);
-            console.log(index);
         });
 
-        test.innerHTML = this._historyArray.length-1;
-        panel.append(test);
+        item.innerHTML = this._historyArray.length-1;
+        panel.append(item);
     }
 
     //загрузить вывести картинку на холст из истории
     load(num){
-        let imgDate = this._historyArray[num];
-        let img = new Image();
-        img.onload = ()=>{
-            this.clear();
-            this._ctx.drawImage(img, 0, 0);
-        }
-        img.src = imgDate;
+        this._ctx.putImageData(this._historyArray[num], 0, 0);
     }
 
     film(ms){
@@ -364,13 +355,48 @@ export default class Paint{
     //сохраняем текущий canvas в виде картинки 
     downloadImage(){
         let link = document.createElement("a");
-        link.href = this._historyArray[this._historyArray.length-1];
+
+        link.href = this._canvas.toDataURL();
 
         link.setAttribute("download", "image.png");
+        
         link.click();
     }
     getContext(){
         return this._ctx;
+    }
+    downloadGif(delay, repeat=0){
+        let encoder = new GIFEncoder(); 
+        encoder.start();
+        encoder.setRepeat(repeat);
+        encoder.setDelay(delay);
+
+        // encoder.setSize(this._width, this._height);
+        if(this._width == 500 && this._height == 500){
+            alert("Извините, по непонятным причинам размер холста не может быть 500х500");
+            if(!confirm("Ширина хоста будет увеличена до 501px")){
+                return;
+            }
+            this.setSize(501, 500);
+        }
+
+        console.log(this._width + " " + this._height);
+        
+        // let array = this.getHistory();
+
+        let array = Array.from(this.getHistory());
+        console.log();
+
+
+        for(let i=0; i<array.length; i++) {
+            this._ctx.putImageData(array[i], 0, 0);
+            encoder.addFrame(this._ctx);
+        }
+    
+        encoder.finish();
+        encoder.download("download.gif");
+
+
     }
 
 }

@@ -2,6 +2,7 @@ import Paint from "./Paint.js";
 
 let paint = new Paint("canvas");
 
+paint.setColor("red");
 paint.setSize(innerWidth-280, innerHeight-80);
 
 //global
@@ -16,7 +17,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
 // header panel
 {
     let clearBtn = document.querySelector(".clear-item");
-    
+
     let settingCanvas = document.querySelector(".setting-canvas");
 
     let saveBtn = document.querySelector(".save-item");
@@ -82,21 +83,9 @@ paint.setSize(innerWidth-280, innerHeight-80);
     }
 
     testBtn.onclick = function(){
-        alert("hi");
-        let encoder = new GIFEncoder(); 
-        encoder.setRepeat(0);
-        encoder.setDelay(100);
+        paint.downloadGif(100, 0);
+        resolve();
 
-        encoder.start();
-
-        paint.load(0);
-        paint.getContext().toDa
-        encoder.addFrame(paint.getContext());
-
-        console.log(paint.getContext());
-
-        encoder.finish();
-        encoder.download("download.gif");
     }
 }
 
@@ -149,6 +138,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
 {
     let film = document.querySelector(".bottom__panel-film");
     
+    let saveFilm = document.querySelector(".bottom__panel-save-gif");
     let inputScale = document.querySelector("#input__canvas-scale");
     inputScale.value=1;
 
@@ -160,5 +150,8 @@ paint.setSize(innerWidth-280, innerHeight-80);
         console.log("start!");
         paint.film(100);
     }
-
+    saveFilm.onclick = (e) => {
+        paint.downloadGif(300, 0);
+        resolve();
+    }
 }
