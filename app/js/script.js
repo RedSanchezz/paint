@@ -1,9 +1,73 @@
 import Paint from "./Paint.js";
-
+//Ищем порядковый номер элемента
+function getNum(elem){
+    let items = document.querySelectorAll(".right__panel-item");
+    for(let i=0; i< items.length; i++){
+        if(Object.is(elem, items[i])) return i;
+    }
+    return 0;
+}
 let paint = new Paint("canvas");
+//INIT
+{
+    function setUnactiveAll(){
+        let items = document.querySelectorAll(".right__panel-item");
+        for (const it of items) {
+            it.classList.remove("left__panel-active");
+        }
+    }
+    paint.setSaveCallback(() => {
+        setUnactiveAll();
+        let panel = document.querySelector(".right__panel");
+        let item = document.createElement("div");
+        item.classList.add("right__panel-item");
+        item.classList.add("left__panel-active");
 
-paint.setColor("red");
-paint.setSize(innerWidth-280, innerHeight-80);
+        item.addEventListener("click", (e)=> {
+            paint.load(getNum(item));
+        });
+        item.innerHTML = paint.getHistory().length-1;
+
+
+        let img = document.createElement("img");
+
+        img.classList.add("right__panel-img");
+
+        img.src = paint.getCanvas().toDataURL("image/png");
+        img.onload = () => {
+            item.append(img);
+        }
+
+
+        let close = document.createElement("div");
+        close.addEventListener("click",(e) => {
+                e.stopPropagation();
+                if(confirm("Удалить из истории ? "))
+                {
+                    let pos=getNum(item);
+                    item.remove();
+                    paint.deleteHistoryItem(pos);
+                }
+        });
+
+        close.classList.add("right__item-close");
+        item.append(close);
+
+        panel.append(item);
+    })
+    paint.setLoadCallback(() => {
+        setUnactiveAll();
+        let items = document.querySelectorAll(".right__panel-item");
+        console.log(paint.getHistoryCurrentNumber());
+        items[paint.getHistoryCurrentNumber()].classList.add("left__panel-active");
+    })
+
+    paint.setSize(innerWidth-280, innerHeight-80);
+    paint.addToHistory();
+
+}
+
+// paint.setColor("red");
 
 //global
 {
@@ -62,8 +126,8 @@ paint.setSize(innerWidth-280, innerHeight-80);
         paint.setScale(inpScale.value);
     });
     //скачать
-    saveBtn.onclick = function(){
-        paint.downloadImage();
+    saveBtn.onclick = async function(){
+            paint.downloadImage();
     };
 
     brushInp.value=paint.getBrush().x;
@@ -71,7 +135,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
     clearBtn.onclick = function(e){
         if(confirm("Очистить холcт ?")) {
             paint.createNewImage();
-            
+            paint.addToHistory();
         }
     }
     brushInp.addEventListener("input", ()=> {
@@ -83,16 +147,14 @@ paint.setSize(innerWidth-280, innerHeight-80);
     }
 
     testBtn.onclick = function(){
+
         paint.downloadGif(100, 0);
-        resolve();
 
     }
 }
 
 //tool panel
 {
-
-
     let btnSq= document.querySelector(".square-brush");
     let btnLine = document.querySelector(".line-brush");
     let eraseBtn = document.querySelector(".left__panel-erase");
@@ -117,6 +179,7 @@ paint.setSize(innerWidth-280, innerHeight-80);
         setUnactiveAll();
         menuBrush.classList.add("left__panel-active");
     }
+    btnLine.click();
 
     eraseBtn.onclick = function(e){
         paint.setTool("eraser");
@@ -150,8 +213,31 @@ paint.setSize(innerWidth-280, innerHeight-80);
         console.log("start!");
         paint.film(100);
     }
-    saveFilm.onclick = (e) => {
-        paint.downloadGif(300, 0);
-        resolve();
+    
+    saveFilm.onclick = async (e) => {
+        await paint.downloadGif(300, 0);
     }
+}
+
+//right panel
+{
+    let nextBtn = document.querySelector("#history-next-btn");
+    let prevBtn = document.querySelector("#history-prev-btn");
+
+    nextBtn.onclick = function(e){
+        let num = paint.getHistoryCurrentNumber();
+        paint.load(++num);
+        console.log("curentNumber" + num);
+
+    }
+
+    prevBtn.onclick = function(e){
+        let num = paint.getHistoryCurrentNumber();
+        paint.load(--num);
+        console.log(num);
+
+    }
+    window.addEventListener("keydown", (e) => {
+        if(e.code == 'KeyZ' && (e.ctrlKey || e.metaKey)) prevBtn.click();
+    });
 }

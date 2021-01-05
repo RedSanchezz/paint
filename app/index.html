@@ -261,12 +261,16 @@
     </section>
     <section class="right__panel">
         <span class="right__title">История</span>
+        <div class="right__panel-buttons">
+            <button id="history-prev-btn" class="history_btn"><=</button>
+            <button id="history-next-btn" class="history_btn">=></button>
+        </div>
     </section>
 
     <div class="modal__setting-canvas">
         <div class="modal__setting-canvas-center">
             <div class="setting-canvas__size">
-                <label>width<input id="setting-canvas__width" type="number"></label>
+                <label>width<input max="9000" id="setting-canvas__width" type="number"></label>
                 <label>height<input id="setting-canvas__height" type="number"></label>
             </div>
             <div class="setting-canvas__position">

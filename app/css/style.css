@@ -114,7 +114,7 @@ img {
       fill: black; }
 
 .left__panel-active {
-  background-color: yellow; }
+  background-color: yellow !important; }
 
 .bottom__panel {
   position: absolute;
@@ -164,9 +164,31 @@ img {
   align-items: center;
   justify-content: center;
   background-color: darkorange;
+  position: relative;
   cursor: pointer; }
   .right__panel-item:hover {
     background-color: red; }
+
+.right__panel-img {
+  height: 50px; }
+
+.right__panel-img:hover {
+  border: 1px solid black; }
+
+.right__item-close {
+  width: 50px;
+  height: 50px;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+.history_btn {
+  height: 50px;
+  width: 45%; }
+
+.right__panel-buttons {
+  background-color: red; }
 
 .left__panel-icon {
   width: 30px;

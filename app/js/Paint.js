@@ -31,6 +31,7 @@ export default class Paint{
         this._listeners = new Map();
         this.setBrush({x: 10, y: 10});
         this.setTool("brush-line");
+        this._currentHistoryNumber = 0;
     }
 
     //замыкание, что бы сохранить котекст
@@ -101,7 +102,22 @@ export default class Paint{
         }
         this._listeners.clear();
     }
+    //сохранить картинку в историю    
+    _save(){
+        //Получаем обьект ImageDate  с хослта
+        let imgDate = this._ctx.getImageData(0, 0, this._width, this._height);
+        this._historyArray.push(imgDate);
 
+
+        //Создаем элемент
+
+
+        this._currentHistoryNumber = this._historyArray.length-1;
+
+        if(this._saveCallback){
+            this._saveCallback();
+        }
+    }
 
     //********Public Interface *************/
     setBrush(brush){
@@ -306,32 +322,24 @@ export default class Paint{
     getCanvas(){
         return this._canvas;
     }
-
-
-    //сохранить картинку в историю    
-    _save(){
-        //Получаем обьект ImageDate  с хослта
-        let imgDate = this._ctx.getImageData(0, 0, this._width, this._height);
-        this._historyArray.push(imgDate);
-
-        //Создаем элемент
-        let panel = document.querySelector(".right__panel");
-        let item = document.createElement("div");
-        item.classList.add("right__panel-item");
-
-
-        let index = this._historyArray.length-1;
-        item.addEventListener("click", (e)=> {
-            this.load(index);
-        });
-
-        item.innerHTML = this._historyArray.length-1;
-        panel.append(item);
+    addToHistory(){
+        this._save();
     }
 
     //загрузить вывести картинку на холст из истории
     load(num){
-        this._ctx.putImageData(this._historyArray[num], 0, 0);
+        if(num>=0 && num<this._historyArray.length)
+        {
+            this._ctx.putImageData(this._historyArray[num], 0, 0);
+            this._currentHistoryNumber = +num;
+            if(this._loadCallback)
+            {
+                this._loadCallback();
+            }
+        }
+    }
+    getHistoryCurrentNumber(){
+        return this._currentHistoryNumber;
     }
 
     film(ms){
@@ -351,6 +359,11 @@ export default class Paint{
 
     getHistory(){
         return this._historyArray;
+    }
+    deleteHistoryItem(num){
+        this._historyArray.splice(num, 1);
+        this.load(this.getHistoryCurrentNumber()-1);
+        console.log("delete history ");
     }
     //сохраняем текущий canvas в виде картинки 
     downloadImage(){
@@ -387,16 +400,20 @@ export default class Paint{
         let array = Array.from(this.getHistory());
         console.log();
 
-
         for(let i=0; i<array.length; i++) {
             this._ctx.putImageData(array[i], 0, 0);
             encoder.addFrame(this._ctx);
         }
-    
         encoder.finish();
         encoder.download("download.gif");
-
-
+    }
+    //Установить callback, который будет вызываться при  сохранении в историю
+    setSaveCallback(func){
+        this._saveCallback = func;
+    }
+    //Установить callback, который будет вызываться при  переходе к кадру истории
+    setLoadCallback(func){
+        this._loadCallback = func;
     }
 
 }
